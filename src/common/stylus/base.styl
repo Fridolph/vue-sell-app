@@ -1,24 +1,25 @@
-html, body 
+body, html
   line-height: 1
   font-weight: 200
-  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, san-serif
+  font-family: 'PingFang SC', 'STHeitiSC-Light', 'Helvetica-Light', arial, sans-serif
 
 .clearfix
-  zoom:1
-  &::after
+  display: inline-block
+  &:after
+    display: block
     content: "."
-    height: 0 
+    height: 0
+    line-height: 0
+    clear: both
     visibility: hidden
-    display:block 
-    clear:both
 
-@media (-webkit-min-device-pixel-radio: 1.5), (min-device-pixel-radio: 1.5)
+@media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5)
   .border-1px
     &::after
       -webkit-transform: scaleY(0.7)
       transform: scaleY(0.7)
 
-@media (-webkit-min-device-pixel-radio: 2), (min-device-pixel-radio: 2)
+@media (-webkit-min-device-pixel-ratio: 2),(min-device-pixel-ratio: 2)
   .border-1px
     &::after
       -webkit-transform: scaleY(0.5)
