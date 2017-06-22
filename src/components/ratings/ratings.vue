@@ -25,10 +25,11 @@
         </div>
       </div>
       <split></split>
-      <ratingselect
-        :select-type="selectType"
-        :only-content="onlyContent"
-        :desc="desc"
+      <ratingselect 
+        @select="selectRating" 
+        @toggle="toggleContent" 
+        :selectType="selectType" 
+        :onlyContent="onlyContent"
         :ratings="ratings">
       </ratingselect>
       <div class="rating-wrapper">
@@ -36,8 +37,7 @@
           <li 
             class="rating-item"
             v-for="rating in ratings"
-            v-show="needShow(rating.rateType, rating.text)"
-          >
+            v-show="needShow(rating.rateType, rating.text)">
             <div class="avatar">
               <img width="28" height="28" :src="rating.avatar" />              
             </div>
@@ -50,12 +50,7 @@
               <p class="text">{{rating.text}}</p>
               <div class="recommend" v-show="rating.recommend && rating.recommend.length">
                 <span class="icon-thumb_up"></span>
-                <span 
-                  class="tag"
-                  v-for="tag in rating.recommend"
-                >
-                  {{tag}}
-                </span>
+                <span class="tag" v-for="tag in rating.recommend">{{tag}}</span>
               </div>
               <div class="time">{{rating.rateTime | formatDate}}</div>
             </div>
@@ -81,6 +76,11 @@
       seller: {
         type: Object,
       }
+    },
+    components: {
+      star,
+      split,
+      ratingselect,
     },
     data() {
       return {
@@ -113,6 +113,18 @@
         } else {
           return type === this.selectType
         }
+      },
+      selectRating(type) {
+        this.selectType = type;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      },
+      toggleContent() {
+        this.onlyContent = !this.onlyContent;
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
       }
     },
     filters: {
@@ -121,25 +133,6 @@
 
         return formatDate(date, 'yyyy-MM-dd hh:mm')
       }
-    },
-    events: {
-      'ratingtype.select': function(type) {
-        this.selectType = type
-        this.$nextTick(() => {
-          this.scroll.refresh()
-        })
-      },
-      'content.toggle': function(onlyContent) {
-        this.onlyContent = onlyContent
-        this.$nextTick(() => {
-          this.scroll.refresh()
-        })
-      }
-    },
-    components: {
-      star,
-      split,
-      ratingselect,
     }
   }
 </script>

@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script type="text/ecmascript-6">
+<script>
   const ALL = 2
   const POSITIVE = 0
   const NEGATIVE = 1
@@ -82,19 +82,17 @@
       }
     },
     methods: {
-      select: function(type, event) {
+      select(type, event) {
         if (!event._constructed) {
-          return
+          return;
         }
-        this.selectType = type
-        this.$dispatch('ratingtype.select', type)
+        this.$emit('select', type);
       },
-      toggleContent: function(event) {
+      toggleContent(event) {
         if (!event._constructed) {
-          return
+          return;
         }
-        this.onlyContent = !this.onlyContent
-        this.$dispatch('content.toggle', this.onlyContent)
+        this.$emit('toggle');
       }
     }
   }

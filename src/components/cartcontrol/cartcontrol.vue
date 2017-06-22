@@ -1,19 +1,18 @@
 <template>
   <div class="cartcontrol">
-    <div 
-      class="cart-decrease" 
-      v-show="food.count > 0" 
-      @click.stop.prevent="decreaseCart" 
-      transition="move"
-    >
-      <span class="inner icon-remove_circle_outline"></span>
-    </div>
+    <transition name="move">
+      <div class="cart-decrease" 
+        v-show="food.count>0" 
+        @click.stop.prevent="decreaseCart">
+        <span class="inner icon-remove_circle_outline"></span>
+      </div>
+    </transition>
     <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
     <div class="cart-add icon-add_circle" @click.stop.prevent="addCart"></div>
   </div>
 </template>
 
-<script tyep="text/ecmascript-6">
+<script>
   import Vue from 'vue'
 
   export default {
@@ -25,25 +24,26 @@
     created() {
       // console.log(this.food)
     },
-    methods: {
+    methods: {      
       addCart(e) {
         if (!e._constructed) {
-          return
+          return;
         }
         console.log('click')
+        
         if (!this.food.count) {
-          Vue.set(this.food, 'count', 1)
+          Vue.set(this.food, 'count', 1);
         } else {
-          this.food.count++
+          this.food.count++;
         }
-        this.$dispatch('cart.add', e.target)
+        this.$emit('add', e.target);
       },
       decreaseCart(e) {
         if (!e._constructed) {
-          return
+          return;
         }
         if (this.food.count) {
-          this.food.count--
+          this.food.count--;
         }
       }
     }
@@ -57,21 +57,14 @@
       display: inline-block
       padding: 5px
       transition: all 0.4s linear
-      &.move-transition
-        opacity: 1
-        transform: translate3d(0,0,0)
-        .inner
-          display: inline-block
-          line-height: 20px
-          font-size: 20px
-          color: rgb(0,160,220)
-          transition: all 0.4s linear
-          transform: rotate(0)
-      &.move-enter, &.move-leave
+      transform: rotate(0)
+      &.move-enter-active, &.move-leave-active
+        transition: all 0.4s linear
+      &.move-enter, &.move-leave-active
         opacity: 0
-        transform: translate3d(24px,0,0)
+        transform: translate3d(24px, 0, 0)
         .inner
-          transform: rotate(360deg)
+          transform: rotate(180deg)      
     .cart-count
       display: inline-block
       position: relative

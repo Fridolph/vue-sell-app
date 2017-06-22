@@ -40,9 +40,9 @@
           <p class="content">{{ seller.bulletin }}</p>
         </div>
         <ul v-if="seller.supports" class="supports">
-          <li class="support-item border-1px" v-for="item in seller.supports">
-            <span class="icon" :class="classMap[seller.supports[$index].type]"></span>
-            <span class="text">{{seller.supports[$index].description}}</span>
+          <li class="support-item border-1px" v-for="(item, index) in seller.supports">
+            <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+            <span class="text">{{seller.supports[index].description}}</span>
           </li>
         </ul>
       </div>
@@ -77,8 +77,12 @@
   export default {
     props: {
       seller: {
-        type: Object,        
+        type: Object      
       }
+    },
+    components: {
+      star,
+      split
     },
     data() {
       return {
@@ -97,16 +101,20 @@
     },            
     watch: {
       'seller'() {
-        this._initScroll()
-        this._initPics()
+        this.$nextTick(() => {
+          this._initScroll();
+          this._initPics();
+        });
       }
     },
-    ready() {
-      this._initScroll()
-      this._initPics() 
+    mounted() {
+      this.$nextTick(() => {
+        this._initScroll();
+        this._initPics();
+      });
     },
     methods: {
-      toggleFavorite(event) {
+      toggleFavorite(e) {
         if (!event._constructed) {
           return
         }
@@ -141,11 +149,7 @@
           })
         }
       }
-    },
-    components: {
-      star,
-      split,
-    },    
+    }
   }
 </script>
 

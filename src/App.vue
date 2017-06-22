@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <v-header v-bind:seller="seller"></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
         <router-link to="/goods">商品</router-link>
@@ -12,7 +12,9 @@
         <router-link to="/seller">商家</router-link>
       </div>
     </div>
-    <router-view :seller="seller" keep-alive></router-view>
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -29,24 +31,24 @@
       return {
         seller: {
           id: (() => {
-            let queryParam = urlParse()
-            return queryParam.id
+            let queryParam = urlParse();
+            return queryParam.id;
           })()
         }
-      }
+      };
     },
     created() {
       this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
-        response = response.body
+        response = response.body;
         if (response.errno === ERR_OK) {
           // this.seller = response.data
           // 打印看看我们取到的数据json
           // console.log(this.seller)
           // vue推荐的给对象扩展属性的方法
-          this.seller = Object.assign({}, this.seller, response.data)
+          this.seller = Object.assign({}, this.seller, response.data);
         }
-      })
-    },
+      });
+    },    
     components: {
       'v-header': header
     }

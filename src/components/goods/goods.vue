@@ -3,7 +3,10 @@
     <div class="goods">
       <div class="menu-wrapper" ref="menu-wrapper">
         <ul>
-          <li v-for="item in goods" class="menu-item" :class="{'current':currentIndex===$index}" @click="selectMenu($index,$event)">
+          <li v-for="(item, index) in goods" 
+            class="menu-item" 
+            :class="{'current':currentIndex===index}" 
+            @click="selectMenu(index, $event)">
             <span class="text border-1px">
               <span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
               {{item.name}}
@@ -16,10 +19,14 @@
           <li class="food-list food-list-hook" v-for="item in goods">
             <h1 class="title">{{item.name}}</h1>
             <ul>
-              <li class="food-item" @click="selectFood(food, $event)" v-for="food in item.foods">
+              <li class="food-item" 
+                v-for="food in item.foods"
+                @click="selectFood(food, $event)">
+
                 <div class="icon">
                   <img :src="food.icon" width="56" />
                 </div>
+
                 <div class="content">
                   <h2 class="name">{{food.name}}</h2>
                   <p class="desc">{{food.description}}</p>
@@ -28,17 +35,23 @@
                   </div>
                   <price :food="food"></price>
                   <div class="cartcontrol-wrapper">
-                    <cartcontrol :food="food"></cartcontrol>
+                    <cartcontrol @add="addFood" :food="food"></cartcontrol>
                   </div>
                 </div>
+                
               </li>
             </ul>
           </li>
         </ul>
       </div>
-      <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+      <shopcart 
+        ref="shopcart" 
+        :selectFoods="selectFoods" 
+        :deliveryPrice="seller.deliveryPrice"
+        :minPrice="seller.minPrice">
+      </shopcart>
     </div>
-    <food :food="selectedFood" ref="food"></food>
+    <food @add="addFood" :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -99,9 +112,9 @@
           // console.log('取到了data.goods的数据')
           // console.log(this.goods)
           this.$nextTick(() => {
-            this._initScroll()
-            this._calculateHeight()
-          })
+            this._initScroll();
+            this._calculateHeight();
+          });
         }
       })
     },
@@ -123,6 +136,9 @@
         this.selectedFood = food
         this.$refs.food.show()
       },
+      addFood(target) {
+        this._drop(target);
+      },
       _drop: function(target) {
         // 体验优化，异步执行下落动画
         this.$nextTick(() => {
@@ -141,16 +157,16 @@
           this.scrollY = Math.abs(Math.round(pos.y))
         })
       },
-      _calculateHeight: function() {
-        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook')
-        let height = 0
+      _calculateHeight() {
+        let foodList = this.$refs.foodList;
+        let height = 0;
 
-        this.listHeight.push(height)
-
+        this.listHeight.push(height);
+        
         for (let i = 0; i < foodList.length; i++) {
-          let item = foodList[i]
-          height += item.clientHeight
-          this.listHeight.push(height)
+          let item = foodList[i];
+          height += item.clientHeight;
+          this.listHeight.push(height);
         }
       }
     },
